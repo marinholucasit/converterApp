@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -10,6 +13,10 @@ void main() async {
   runApp(
     MaterialApp(
       home: Home(),
+      theme: ThemeData(
+        hintColor: Colors.amber,
+        primaryColor: Colors.white,
+      ),
     ),
   );
 }
@@ -20,6 +27,27 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final realController = TextEditingController();
+  final dolarControler = TextEditingController();
+  final euroController = TextEditingController();
+  
+  double dolar;
+  double euro;
+
+  void _realChanged(String text){
+
+
+  }
+
+  void _dolarChanged(String text){
+    
+  }
+
+  void _euroChanged(String text){
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,8 +86,21 @@ class _HomeState extends State<Home> {
                   ),
                 ); 
               } else {
-                return Container(
-                  color: Colors.green,
+                dolar = snapShot.data["results"]["currencies"]["USD"]["buy"];
+                euro = snapShot.data["results"]["currencies"]["EUR"]["buy"];
+                return SingleChildScrollView(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Icon(Icons.monetization_on, size: 150.0, color: Colors.amber),
+                      BuildTextField("Real", "R\$", realController, _realChanged),
+                      Divider(),
+                      BuildTextField("Dolar", "US\$", dolarControler, _dolarChanged),                      
+                      Divider(),
+                      BuildTextField("Euro", "€", euroController, _euroChanged),                      
+                    ],
+                  ),
                 );
               }
           }
@@ -74,3 +115,22 @@ Future<Map> getData() async{
   return json.decode(response.body);
 }
 
+Widget BuildTextField(String cLabel, String cPrefix, TextEditingController oController, Function fFunction){
+  return TextField( controller: oController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],                    
+                    decoration: InputDecoration(
+                      labelText: cLabel,
+                      labelStyle: TextStyle(color: Colors.amber),
+                      border: OutlineInputBorder(),
+                      prefixText: cPrefix, 
+                    ),
+                    style: TextStyle(
+                      color: Colors.amber, 
+                      fontSize: 25.0,
+                    ),
+                    onChanged: fFunction,
+                  );
+}
