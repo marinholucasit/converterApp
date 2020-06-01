@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-const requestUrl = "https://api.hgbrasil.com/finance?format=json-cors&key=d37d9bab";
+const requestUrl = "https://api.hgbrasil.com/finance?format=json-cors&key={chaveDaApi}";
 
 void main() async {
 
